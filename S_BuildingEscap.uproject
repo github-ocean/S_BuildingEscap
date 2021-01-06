@@ -7,7 +7,10 @@
 		{
 			"Name": "S_BuildingEscap",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine"
+			]
 		}
 	]
 }
