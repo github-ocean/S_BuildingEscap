@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "WorldPosition.h"
 #include "GameFramework/Actor.h"
 
@@ -24,7 +23,10 @@ void UWorldPosition::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("%s"), *Log);*/
 
 	FString ActorName = GetOwner()->GetName();
-	UE_LOG(LogTemp, Warning, TEXT("Owner is %s"), *ActorName);
+	FString ActorLocation = GetOwner()->GetActorLocation().ToString();
+	UE_LOG(LogTemp, Warning, TEXT("%s is at position %s"), *ActorName, *ActorLocation);
+
+
 }
 
 
