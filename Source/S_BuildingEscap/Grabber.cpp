@@ -5,6 +5,7 @@
 #include "DrawDebugHelpers.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
 
 #define OUT 
 
@@ -22,7 +23,16 @@ void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UE_LOG(LogTemp, Warning, TEXT("Grabber reporting for duty."));
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+
+	if (PhysicsHandle)
+	{
+		// Physics handle component found.
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("No Physics Handle Component Found on %s. "), *GetOwner()->GetName());
+	}
 	
 }
 
@@ -37,10 +47,22 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT PlayerViewpointLocation,OUT PlayerViewpointRotation);
 
-	UE_LOG(LogTemp, Warning, TEXT("Location : %s, Rotation : %s"), *PlayerViewpointLocation.ToString(), *PlayerViewpointRotation.ToString());
+	// UE_LOG(LogTemp, Warning, TEXT("Location : %s, Rotation : %s"), *PlayerViewpointLocation.ToString(), *PlayerViewpointRotation.ToString());
 
 	FVector LineTraceEnd = PlayerViewpointLocation + PlayerViewpointRotation.Vector() * Reach;
 
 	DrawDebugLine(GetWorld(), PlayerViewpointLocation, LineTraceEnd, FColor(0.f, 255.f, 0.f), false, 0.f, 0, 5.f);
+
+	FHitResult Hit;
+	FCollisionQueryParams TraceParams(FName(TEXT("")), false, GetOwner());
+
+	GetWorld()->LineTraceSingleByObjectType(OUT Hit, PlayerViewpointLocation, LineTraceEnd, FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody), TraceParams);
+
+	AActor* ActorHit = Hit.GetActor();
+
+	if (ActorHit)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Line trace has hit : %s"), *(ActorHit->GetName()));
+	}
 }
 
