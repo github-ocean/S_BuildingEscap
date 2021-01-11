@@ -34,6 +34,12 @@ void UGrabber::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("No Physics Handle Component Found on %s. "), *GetOwner()->GetName());
 	}
 	
+	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
+
+	if (InputComponent)
+	{
+		InputComponent->BindAction(TEXT("Grab"), IE_Pressed, this, &UGrabber::Grab);
+	}
 }
 
 
@@ -66,3 +72,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	}
 }
 
+void UGrabber::Grab()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Right mouse button is pressed"))
+}
