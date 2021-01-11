@@ -22,18 +22,24 @@ UGrabber::UGrabber()
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	FindPhysicsHandle();
 
+	SetupInputComponent();
+}
+
+void UGrabber::FindPhysicsHandle()
+{
 	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
 
 	if (PhysicsHandle)
 	{
 		// Physics handle component found.
 	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("No Physics Handle Component Found on %s. "), *GetOwner()->GetName());
-	}
-	
+}
+
+void UGrabber::SetupInputComponent()
+{
 	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
 
 	if (InputComponent)
@@ -43,22 +49,31 @@ void UGrabber::BeginPlay()
 	}
 }
 
+void UGrabber::Grab()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Right mouse button pressed."));
+	GetFirstPhysicsBodyInReach();
+}
+
+void UGrabber::Release()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Right mouse Button Released."));
+}
 
 // Called every frame
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+}
 
+FHitResult UGrabber::GetFirstPhysicsBodyInReach() const
+{
 	FVector PlayerViewpointLocation;
 	FRotator PlayerViewpointRotation;
 
-	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT PlayerViewpointLocation,OUT PlayerViewpointRotation);
-
-	// UE_LOG(LogTemp, Warning, TEXT("Location : %s, Rotation : %s"), *PlayerViewpointLocation.ToString(), *PlayerViewpointRotation.ToString());
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT PlayerViewpointLocation, OUT PlayerViewpointRotation);
 
 	FVector LineTraceEnd = PlayerViewpointLocation + PlayerViewpointRotation.Vector() * Reach;
-
-	DrawDebugLine(GetWorld(), PlayerViewpointLocation, LineTraceEnd, FColor(0.f, 255.f, 0.f), false, 0.f, 0, 5.f);
 
 	FHitResult Hit;
 	FCollisionQueryParams TraceParams(FName(TEXT("")), false, GetOwner());
@@ -69,16 +84,8 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 	if (ActorHit)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Line trace has hit : %s"), *(ActorHit->GetName()));
+		UE_LOG(LogTemp, Warning, TEXT("Line trace has hit : %s"), *(ActorHit->GetName()));
 	}
-}
 
-void UGrabber::Grab()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Right mouse button pressed."));
-}
-
-void UGrabber::Release()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Right mouse Button Released."));
+	return Hit;
 }
