@@ -28,16 +28,6 @@ void UGrabber::BeginPlay()
 	SetupInputComponent();
 }
 
-void UGrabber::FindPhysicsHandle()
-{
-	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-
-	if (PhysicsHandle)
-	{
-		// Physics handle component found.
-	}
-}
-
 void UGrabber::SetupInputComponent()
 {
 	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
@@ -47,6 +37,11 @@ void UGrabber::SetupInputComponent()
 		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
 		InputComponent->BindAction("Grab", IE_Released, this, &UGrabber::Release);
 	}
+}
+
+void UGrabber::FindPhysicsHandle()
+{
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
 }
 
 void UGrabber::Grab()
@@ -112,4 +107,9 @@ FHitResult UGrabber::GetFirstPhysicsBodyInReach() const
 	}
 
 	return Hit;
+}
+
+FVector UGrabber::GetPlayerReach() const
+{
+	return FVector();
 }
