@@ -29,8 +29,6 @@ void UOpenDoor::BeginPlay()
 	InitialYaw = GetOwner()->GetActorRotation().Yaw;
 	CurrentYaw = InitialYaw;
 	OpenAngle += InitialYaw;
-	
-	AcotrThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
 
 

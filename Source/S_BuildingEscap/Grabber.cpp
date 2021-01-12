@@ -56,7 +56,8 @@ void UGrabber::Grab()
 	FHitResult HitResult = GetFirstPhysicsBodyInReach();
 	UPrimitiveComponent* ComponentToGrab = HitResult.GetComponent();
 
-	if (HitResult.GetActor())
+	AActor* HitActor = HitResult.GetActor();
+	if (HitActor)
 	{
 		PhysicsHandle->GrabComponentAtLocation(ComponentToGrab, NAME_None, LineTraceEnd);
 	}
@@ -109,7 +110,7 @@ FHitResult UGrabber::GetFirstPhysicsBodyInReach() const
 	return Hit;
 }
 
-FVector UGrabber::GetPlayerReach() const
+/*FVector UGrabber::GetPlayerReach() const
 {
 	return FVector();
-}
+}*/
