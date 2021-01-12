@@ -27,8 +27,10 @@ private:
 
 	float Reach = 100.f;
 
+	UPROPERTY()
 	class UPhysicsHandleComponent* PhysicsHandle = nullptr;
 
+	UPROPERTY()
 	class UInputComponent* InputComponent = nullptr;
 
 	void Grab();
